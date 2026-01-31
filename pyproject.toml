@@ -1,13 +1,9 @@
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "scirex"
-version = "1.0.0"
+version = "0.1.0"
 description = "Scientific Research and Engineering eXcellence Framework"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 keywords = [
     "scientific-computing",
@@ -92,24 +88,22 @@ Repository = "https://github.com/zenoxml/SciREX"
 "Bug Tracker" = "https://github.com/zenoxml/SciREX/issues"
 "Research Blog" = "https://scirex.org/blog"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
+[build-system]
+requires = ["uv_build>=0.9.26,<0.10.0"]
+build-backend = "uv_build"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["scirex*"]
-
+[tool.uv.build-backend]
+module-name = "scirex"
+module-root = ""
 
 [tool.pytest.ini_options]
 minversion = "7.0"
 addopts = "-ra -q --cov=scirex"
-testpaths = [
-    "tests",
-]
+testpaths = [ "tests" ]
 
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ['py311']
 include = '\.pyi?$'
 
 [tool.isort]
