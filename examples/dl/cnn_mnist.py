@@ -61,10 +61,10 @@ from sklearn.metrics import (
 import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import mnist
 
-from scirex.core.dl.jax_backend.equinox import layers, activations, utils
-from scirex.core.dl.jax_backend.equinox.base import Model, Network
-from scirex.core.dl.jax_backend.equinox.losses import cross_entropy_loss
-from scirex.core.dl.jax_backend.equinox.metrics import accuracy
+from scirex.eperimental.core.dl.jax_backend.equinox import layers, activations, utils
+from scirex.eperimental.core.dl.jax_backend.equinox.base import Model, Network
+from scirex.eperimental.core.dl.jax_backend.equinox.losses import cross_entropy_loss
+from scirex.eperimental.core.dl.jax_backend.equinox.metrics import accuracy
 
 # Set random seed for reproducibility
 key = jax.random.PRNGKey(42)

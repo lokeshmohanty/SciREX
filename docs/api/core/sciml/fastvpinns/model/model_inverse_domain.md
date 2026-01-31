@@ -1,2 +1,2 @@
-::: scirex.core.sciml.fastvpinns.model.model_inverse_domain
+::: scirex.eperimental.core.sciml.fastvpinns.model.model_inverse_domain
 

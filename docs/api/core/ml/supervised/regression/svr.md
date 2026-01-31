@@ -1,1 +1,1 @@
-::: scirex.core.ml.supervised.regression.svr
+::: scirex.eperimental.core.ml.supervised.regression.svr

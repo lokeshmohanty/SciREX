@@ -1,2 +1,2 @@
 
-::: scirex.core.ml.unsupervised.clustering.agglomerative
+::: scirex.eperimental.core.ml.unsupervised.clustering.agglomerative

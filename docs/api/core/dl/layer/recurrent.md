@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.layers.recurrent
+::: scirex.eperimental.core.dl.nn.layers.recurrent

@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.layers.embeddings
+::: scirex.eperimental.core.dl.nn.layers.embeddings

@@ -1,2 +1,2 @@
 
-::: scirex.core.ml.supervised.classification.base
+::: scirex.eperimental.core.ml.supervised.classification.base

@@ -1,2 +1,2 @@
 
-::: scirex.core.ml.supervised.classification.svm
+::: scirex.eperimental.core.ml.supervised.classification.svm

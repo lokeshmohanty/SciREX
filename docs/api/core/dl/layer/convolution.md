@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.layers.convolution
+::: scirex.eperimental.core.dl.nn.layers.convolution

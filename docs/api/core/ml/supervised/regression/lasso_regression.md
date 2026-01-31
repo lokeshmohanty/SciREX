@@ -1,2 +1,2 @@
 
-::: scirex.core.ml.supervised.regression.lasso_regression
+::: scirex.eperimental.core.ml.supervised.regression.lasso_regression

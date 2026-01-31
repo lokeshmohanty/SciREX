@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.activation
+::: scirex.eperimental.core.dl.nn.activation

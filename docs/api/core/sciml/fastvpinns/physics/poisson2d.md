@@ -1,1 +1,1 @@
-::: scirex.core.sciml.fastvpinns.physics.poisson2d
+::: scirex.eperimental.core.sciml.fastvpinns.physics.poisson2d

@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.layers.linear
+::: scirex.eperimental.core.dl.nn.layers.linear

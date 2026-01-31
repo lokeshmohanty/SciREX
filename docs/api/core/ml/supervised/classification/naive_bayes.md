@@ -1,2 +1,2 @@
 
-::: scirex.core.ml.supervised.classification.naive_bayes
+::: scirex.eperimental.core.ml.supervised.classification.naive_bayes

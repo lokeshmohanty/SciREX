@@ -1,2 +1,2 @@
 
-::: scirex.core.sciml.fno.layers.fno_block_1d
+::: scirex.eperimental.core.sciml.fno.layers.fno_block_1d

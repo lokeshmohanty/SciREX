@@ -41,7 +41,7 @@
 
 import numpy as np
 import tensorflow as tf
-from scirex.core.model_compression.quantization import QuantizationAwareTraining
+from scirex.eperimental.core.model_compression.quantization import QuantizationAwareTraining
 
 # Load MNIST dataset
 (train_images, train_labels), (test_images, test_labels) = (

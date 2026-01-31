@@ -44,7 +44,7 @@ Here is the complete example script for Linear Regression:
 ```python
 import numpy as np
 from sklearn.datasets import make_regression
-from scirex.core.ml.supervised.regression.linear_regression import LinearRegressionModel
+from scirex.eperimental.core.ml.supervised.regression.linear_regression import LinearRegressionModel
 
 # Generate synthetic regression data
 X, y = make_regression(

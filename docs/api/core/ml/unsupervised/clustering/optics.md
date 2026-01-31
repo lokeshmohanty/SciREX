@@ -1,2 +1,2 @@
 
-::: scirex.core.ml.unsupervised.clustering.optics
+::: scirex.eperimental.core.ml.unsupervised.clustering.optics

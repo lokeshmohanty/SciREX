@@ -1,1 +1,1 @@
-::: scirex.core.ml.unsupervised.clustering.hdbscan
+::: scirex.eperimental.core.ml.unsupervised.clustering.hdbscan

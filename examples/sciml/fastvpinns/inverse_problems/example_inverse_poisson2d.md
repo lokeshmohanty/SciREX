@@ -126,9 +126,9 @@ import time
 from tqdm import tqdm
 
 # FastvPINNs specific modules
-from scirex.core.sciml.geometry.geometry_2d import Geometry_2D
-from scirex.core.sciml.fe.fespace2d import Fespace2D
-from scirex.core.sciml.fastvpinns.data.datahandler2d import DataHandler2D
+from scirex.eperimental.core.sciml.geometry.geometry_2d import Geometry_2D
+from scirex.eperimental.core.sciml.fe.fespace2d import Fespace2D
+from scirex.eperimental.core.sciml.fastvpinns.data.datahandler2d import DataHandler2D
 ```
 
 ### 2. Problem Configuration

@@ -53,9 +53,9 @@ import jax.numpy as jnp
 import optax
 from tensorflow.keras.datasets import mnist
 
-from scirex.core.dl.jax_backend.equinox import layers, losses, activations, utils
-from scirex.core.dl.jax_backend.equinox.base import Model, Network
-from scirex.core.dl.jax_backend.equinox.networks import FCNN
+from scirex.eperimental.core.dl.jax_backend.equinox import layers, losses, activations, utils
+from scirex.eperimental.core.dl.jax_backend.equinox.base import Model, Network
+from scirex.eperimental.core.dl.jax_backend.equinox.networks import FCNN
 
 # Generate random keys for layer initialization
 keys = jax.random.split(jax.random.PRNGKey(0), 3)

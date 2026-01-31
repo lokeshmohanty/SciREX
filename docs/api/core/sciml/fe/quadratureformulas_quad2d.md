@@ -1,2 +1,2 @@
-::: scirex.core.sciml.fe.quadratureformulas_quad2d
+::: scirex.eperimental.core.sciml.fe.quadratureformulas_quad2d
 

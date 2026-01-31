@@ -43,7 +43,7 @@ Here is the complete example script:
 ```python
 import numpy as np
 from sklearn.datasets import make_regression
-from scirex.core.ml.supervised.regression.lasso_regression import LassoRegressionModel
+from scirex.eperimental.core.ml.supervised.regression.lasso_regression import LassoRegressionModel
 
 # Generate synthetic regression data
 X, y = make_regression(

@@ -42,7 +42,7 @@ Example Usage: Support Vector Regression (SVR) on a Sample Dataset
         - 01/Feb/2025: Initial version    
 """
 
-from scirex.core.ml.supervised.regression.svr import SVRModel
+from scirex.eperimental.core.ml.supervised.regression.svr import SVRModel
 
 # Sample dataset (for illustration purposes, replace with actual data)
 import numpy as np

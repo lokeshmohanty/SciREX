@@ -7,7 +7,7 @@ To use the classification module, you will need to import the specific classifie
 
 ```python
 
-from scirex.core.ml.supervised.classification.logistic_regression import LogisticRegressionClassifier
+from scirex.eperimental.core.ml.supervised.classification.logistic_regression import LogisticRegressionClassifier
 
 ```
 ## Load and Prepare Your Dataset

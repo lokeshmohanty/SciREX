@@ -24,27 +24,27 @@ Author : Dev Sahoo (debajyotis@iisc.ac.in)
 
 - **KMeans**
   ```python
-  from scirex.core.ml.unsupervised.clustering.kmeans import Kmeans
+  from scirex.eperimental.core.ml.unsupervised.clustering.kmeans import Kmeans
   ```
 - **DBSCAN**
   ```python
-  from scirex.core.ml.unsupervised.clustering.dbscan import Dbscan
+  from scirex.eperimental.core.ml.unsupervised.clustering.dbscan import Dbscan
   ```
 - **HDBSCAN**
   ```python
-  from scirex.core.ml.unsupervised.clustering.hdbscan import Hdbscan
+  from scirex.eperimental.core.ml.unsupervised.clustering.hdbscan import Hdbscan
   ```
 - **GMM** (Gaussian Mixture Model)
   ```python
-  from scirex.core.ml.unsupervised.clustering.gmm import Gmm
+  from scirex.eperimental.core.ml.unsupervised.clustering.gmm import Gmm
   ```
 - **OPTICS**
   ```python
-  from scirex.core.ml.unsupervised.clustering.optics import Optics
+  from scirex.eperimental.core.ml.unsupervised.clustering.optics import Optics
   ```
 - **Agglomerative Clustering**
   ```python
-  from scirex.core.ml.unsupervised.clustering.agglomerative import Agglomerative
+  from scirex.eperimental.core.ml.unsupervised.clustering.agglomerative import Agglomerative
   ```
 
 ### Parameter Selection Option
@@ -70,7 +70,7 @@ from sklearn.datasets import make_blobs, make_moons
 from sklearn.preprocessing import StandardScaler
 
 # Import SciREX KMeans model
-from scirex.core.ml.unsupervised.clustering.kmeans import Kmeans
+from scirex.eperimental.core.ml.unsupervised.clustering.kmeans import Kmeans
 ```
 
 ## Overview

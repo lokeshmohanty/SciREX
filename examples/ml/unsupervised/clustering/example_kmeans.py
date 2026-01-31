@@ -40,7 +40,7 @@ Dependencies:
    - numpy
    - matplotlib
    - scikit-learn 
-   - scirex.core.ml.unsupervised.clustering.kmeans
+   - scirex.eperimental.core.ml.unsupervised.clustering.kmeans
 
 Authors:
    - Debajyoti Sahoo (debajyotis@iisc.ac.in)
@@ -59,7 +59,7 @@ from sklearn.datasets import make_blobs, make_moons
 from sklearn.preprocessing import StandardScaler
 
 # Import SciREX model
-from scirex.core.ml.unsupervised.clustering.kmeans import Kmeans
+from scirex.eperimental.core.ml.unsupervised.clustering.kmeans import Kmeans
 
 
 def run_clustering(model, X, dataset_name: str):

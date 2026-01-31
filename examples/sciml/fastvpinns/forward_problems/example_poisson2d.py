@@ -42,9 +42,9 @@ import time
 from tqdm import tqdm
 
 # Fastvpinns Modules
-from scirex.core.sciml.geometry.geometry_2d import Geometry_2D
-from scirex.core.sciml.fe.fespace2d import Fespace2D
-from scirex.core.sciml.fastvpinns.data.datahandler2d import DataHandler2D
+from scirex.eperimental.core.sciml.geometry.geometry_2d import Geometry_2D
+from scirex.eperimental.core.sciml.fe.fespace2d import Fespace2D
+from scirex.eperimental.core.sciml.fastvpinns.data.datahandler2d import DataHandler2D
 
 i_mesh_type = "quadrilateral"  # "quadrilateral"
 i_mesh_generation_method = "internal"  # "internal" or "external"
@@ -226,8 +226,8 @@ datahandler = DataHandler2D(fespace, domain, dtype=i_dtype)
 params_dict = {}
 params_dict["n_cells"] = fespace.n_cells
 
-from scirex.core.sciml.fastvpinns.model.model import DenseModel
-from scirex.core.sciml.fastvpinns.physics.poisson2d import pde_loss_poisson
+from scirex.eperimental.core.sciml.fastvpinns.model.model import DenseModel
+from scirex.eperimental.core.sciml.fastvpinns.physics.poisson2d import pde_loss_poisson
 
 params_dict = {}
 params_dict["n_cells"] = fespace.n_cells

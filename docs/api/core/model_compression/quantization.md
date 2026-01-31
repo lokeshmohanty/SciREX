@@ -1,1 +1,1 @@
-::: scirex.core.model_compression.quantization
+::: scirex.eperimental.core.model_compression.quantization

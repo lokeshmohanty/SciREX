@@ -1,1 +1,1 @@
-::: scirex.core.sciml.fastvpinns.physics.cd2d
+::: scirex.eperimental.core.sciml.fastvpinns.physics.cd2d

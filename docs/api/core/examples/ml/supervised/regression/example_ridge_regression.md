@@ -44,7 +44,7 @@ Here is the complete example script:
 ```python
 import numpy as np
 from sklearn.datasets import make_regression
-from scirex.core.ml.supervised.regression.ridge_regression import RidgeRegressionModel
+from scirex.eperimental.core.ml.supervised.regression.ridge_regression import RidgeRegressionModel
 
 # Generate synthetic regression data
 X, y = make_regression(

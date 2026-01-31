@@ -1,1 +1,1 @@
-::: scirex.core.model_compression.pruning
+::: scirex.eperimental.core.model_compression.pruning

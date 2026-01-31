@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.loss
+::: scirex.eperimental.core.dl.nn.loss

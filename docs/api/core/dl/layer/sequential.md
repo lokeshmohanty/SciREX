@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.layers.sequential
+::: scirex.eperimental.core.dl.nn.layers.sequential

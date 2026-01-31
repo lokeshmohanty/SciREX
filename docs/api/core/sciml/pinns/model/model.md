@@ -1,1 +1,1 @@
-::: scirex.core.sciml.pinns.model.model
+::: scirex.eperimental.core.sciml.pinns.model.model

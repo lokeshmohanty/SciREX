@@ -1,1 +1,1 @@
-::: scirex.core.dl.nn.layers.normalisation
+::: scirex.eperimental.core.dl.nn.layers.normalisation

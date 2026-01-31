@@ -1,1 +1,1 @@
-::: scirex.core.sciml.fastvpinns.model.model
+::: scirex.eperimental.core.sciml.fastvpinns.model.model

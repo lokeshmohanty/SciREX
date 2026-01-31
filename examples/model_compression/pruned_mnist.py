@@ -43,7 +43,7 @@
 
 import numpy as np
 import tensorflow as tf
-from scirex.core.model_compression.pruning import ModelPruning
+from scirex.eperimental.core.model_compression.pruning import ModelPruning
 
 # Load MNIST dataset
 (train_images, train_labels), (test_images, test_labels) = (

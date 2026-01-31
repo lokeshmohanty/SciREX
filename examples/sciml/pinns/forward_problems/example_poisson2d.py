@@ -43,11 +43,11 @@ from tqdm import tqdm
 from pyDOE import lhs
 
 # Fastvpinns Modules
-from scirex.core.sciml.geometry.geometry_2d import Geometry_2D
-from scirex.core.sciml.fe.fespace2d import Fespace2D
-from scirex.core.sciml.fastvpinns.data.datahandler2d import DataHandler2D
-from scirex.core.sciml.pinns.model.model import DenseModel
-from scirex.core.sciml.pinns.physics.poisson2d import pde_loss_poisson2d
+from scirex.eperimental.core.sciml.geometry.geometry_2d import Geometry_2D
+from scirex.eperimental.core.sciml.fe.fespace2d import Fespace2D
+from scirex.eperimental.core.sciml.fastvpinns.data.datahandler2d import DataHandler2D
+from scirex.eperimental.core.sciml.pinns.model.model import DenseModel
+from scirex.eperimental.core.sciml.pinns.physics.poisson2d import pde_loss_poisson2d
 
 i_mesh_type = "quadrilateral"  # "quadrilateral"
 i_mesh_generation_method = "internal"  # "internal" or "external"

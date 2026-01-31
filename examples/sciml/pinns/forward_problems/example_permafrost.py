@@ -44,9 +44,9 @@ from pyDOE import lhs
 
 # Fastvpinns Modules
 
-from scirex.core.sciml.pinns.model.model_scalar_transient import DenseModel
-from scirex.core.sciml.pinns.physics.energy import pde_loss_permafrost
-from scirex.core.sciml.pinns.optimizers.lbfgs import *
+from scirex.eperimental.core.sciml.pinns.model.model_scalar_transient import DenseModel
+from scirex.eperimental.core.sciml.pinns.physics.energy import pde_loss_permafrost
+from scirex.eperimental.core.sciml.pinns.optimizers.lbfgs import *
 
 i_mesh_type = "quadrilateral"  # "quadrilateral"
 i_mesh_generation_method = "internal"  # "internal" or "external"

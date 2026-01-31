@@ -44,8 +44,8 @@ pip install scirex
 A classification model that takes MNIST digit images and predicts their corresponding digit class (0-9).
 
 ```python
-from scirex.core.dl import Model, Network
-import scirex.core.dl.nn as nn
+from scirex.eperimental.core.dl import Model, Network
+import scirex.eperimental.core.dl.nn as nn
 
 class CNN(Network):
     def __init__(self):
@@ -105,9 +105,9 @@ Features:
 #### CNN (`cnn-mnist.py`)
 ```python
 # Import required modules
-from scirex.core.dl import Model, Network
-from scirex.core.dl.nn.loss import cross_entropy_loss
-from scirex.core.dl.nn.metrics import accuracy
+from scirex.eperimental.core.dl import Model, Network
+from scirex.eperimental.core.dl.nn.loss import cross_entropy_loss
+from scirex.eperimental.core.dl.nn.metrics import accuracy
 
 # Create and train model
 model = Model(CNN(), optax.adam(learning_rate), cross_entropy_loss, [accuracy])
@@ -118,7 +118,7 @@ model.save_net("mnist-cnn.dl")
 #### VAE (`vae-mnist.py`)
 ```python
 # Import required modules
-from scirex.core.dl import Model, Network, FCNN
+from scirex.eperimental.core.dl import Model, Network, FCNN
 
 # Create and train model
 model = Model(VAE(encoderLayers, decoderLayers), optax.adam(learning_rate), loss_fn)

@@ -49,7 +49,7 @@
 import jax
 import jax.numpy as jnp
 
-from scirex.core.dl.jax_backend.equinox.networks gcn import GCN, GCNModel
+from scirex.eperimental.core.dl.jax_backend.equinox.networks gcn import GCN, GCNModel
 
 from torch_geometric.datasets import Planetoid
 
