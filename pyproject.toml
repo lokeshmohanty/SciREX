@@ -36,11 +36,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    # "matplotlib>=3.10.8",
-    # "numpy>=1.26.4",
-    # "seaborn>=0.13.2",
-    # "tqdm>=4.66.3",
-    # "scikit-learn>=1.7.2",
+    "flax>=0.10.6",
+    "grain>=0.2.13",
+    "jax[cuda]>=0.5.3",
 ]
 
 [dependency-groups]
@@ -59,7 +57,12 @@ dev = [
 ]
 
 [project.optional-dependencies]
-# Experimental features (moved from core, uses numpy<2.0 for TensorFlow compatibility)
+exp-simple = [
+    "tiktoken>=0.12.0",
+    "matplotlib>=3.10.8",
+    "scikit-learn>=1.7.2",
+    "tqdm>=4.66.3",
+]
 experimental = [
     "pandas>=2.0.0",
     "scikit-learn>=1.3.0",
@@ -77,11 +80,6 @@ experimental = [
     "tensorflow-model-optimization>=0.8.0",
     "torch>=2.0.0",
     "torch_geometric>=2.3.0",
-    "jax-ai-stack[grain,tfds]>=2025.2.5",
-]
-vit = [
-    "datasets>=4.5.0",
-    "torchvision>=0.25.0",
 ]
 
 [tool.mypy]
@@ -106,30 +104,6 @@ extend_exclude = [
     "examples/"
 ]
 ignore = ["DEP002"]
-# per_rule_ignores = { DEP002 = [
-#     "jax-ai-stack",
-#     "numpy",
-#     "tqdm",
-#     "pandas",
-#     "scikit-learn",
-#     "matplotlib",
-#     "seaborn",
-#     "xgboost",
-#     "ipykernel",
-#     "jupyter",
-#     "tensorflow",
-#     "meshio",
-#     "pyDOE",
-#     "scipy",
-#     "gmsh",
-#     "pyyaml",
-#     "tensorflow-model-optimization",
-#     "torch",
-#     "torch_geometric",
-#     "datasets",
-#     "torchvision",
-# ], DEP004 = ["pytest"] }
-# known_first_party = ["scirex"]
 
 [tool.ruff]
 target-version = "py39"
@@ -138,42 +112,26 @@ fix = true
 
 [tool.ruff.lint]
 select = [
-    # flake8-2020
-    "YTT",
-    # flake8-bandit
-    "S",
-    # flake8-bugbear
-    "B",
-    # flake8-builtins
-    "A",
-    # flake8-comprehensions
-    "C4",
-    # flake8-debugger
-    "T10",
-    # flake8-simplify
-    "SIM",
-    # isort
-    "I",
-    # mccabe
-    "C90",
-    # pycodestyle
-    "E", "W",
-    # pyflakes
-    "F",
-    # pygrep-hooks
-    "PGH",
-    # pyupgrade
-    "UP",
-    # ruff
-    "RUF",
-    # tryceratops
-    "TRY",
+    "YTT", # flake8-2020
+    "S", # flake8-bandit
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "C4", # flake8-comprehensions
+    "T10", # flake8-debugger
+    "SIM", # flake8-simplify
+    "I", # isort
+    "C90", # mccabe
+    "E", "W", # pycodestyle
+    "F", # pyflakes
+    "PGH", # pygrep-hooks
+    "UP", # pyupgrade
+    "RUF", # ruff
+    "TRY", # tryceratops
 ]
 ignore = [
-    # LineTooLong
-    "E501",
-    # DoNotAssignLambda
-    "E731",
+    "E501", # LineTooLong
+    "E731", # DoNotAssignLambda
+    "S311", # Pseudo-random numbers
 ]
 
 [tool.ruff.lint.per-file-ignores]

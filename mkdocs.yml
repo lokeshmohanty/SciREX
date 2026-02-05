@@ -28,6 +28,7 @@ exclude_docs: |
 
 nav:
   - Docs: index.md
+  - Transformers: api/transformers/index.md
   - Experimental:
       - Machine Learning:
           - Supervised:
