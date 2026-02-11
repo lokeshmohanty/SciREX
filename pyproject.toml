@@ -39,6 +39,9 @@ dependencies = [
     "flax>=0.10.6",
     "grain>=0.2.13",
     "jax[cuda]>=0.5.3",
+    "loguru>=0.7.2",
+    "matplotlib>=3.10.8",
+    "numpy>=1.26.4",
 ]
 
 [dependency-groups]
@@ -57,11 +60,9 @@ dev = [
 ]
 
 [project.optional-dependencies]
-exp-simple = [
+eg-simple = [
     "tiktoken>=0.12.0",
-    "matplotlib>=3.10.8",
     "scikit-learn>=1.7.2",
-    "tqdm>=4.66.3",
 ]
 experimental = [
     "pandas>=2.0.0",

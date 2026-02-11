@@ -24,127 +24,15 @@ theme:
   # Add a custom vibrant logo here
 
 exclude_docs: |
-  api/experimental/sciml/**
+  api/experimental/**
 
 nav:
   - Docs: index.md
-  - Transformers: api/transformers/index.md
-  - Experimental:
-      - Machine Learning:
-          - Supervised:
-              - Classification:
-                  - base: api/experimental/ml/supervised/classification/base.md
-                  - naive bayes: api/experimental/ml/supervised/classification/naive_bayes.md
-                  - Logistic regression: api/experimental/ml/supervised/classification/logistic_regression.md
-                  - Decision tree: api/experimental/ml/supervised/classification/decision_tree.md
-                  - SVM: api/experimental/ml/supervised/classification/svm.md
-              - Regression:
-                  - base: api/experimental/ml/supervised/regression/base.md
-                  - Linear regression: api/experimental/ml/supervised/regression/linear_regression.md
-                  - Ridge regression: api/experimental/ml/supervised/regression/ridge_regression.md
-                  - Lasso regression: api/experimental/ml/supervised/regression/lasso_regression.md
-                  - Polynomial regression: api/experimental/ml/supervised/regression/polynomial_regression.md
-                  - support vector regression: api/experimental/ml/supervised/regression/svr.md
-
-          - Unsupervised:
-              - Clustering:
-                  - Base: api/experimental/ml/unsupervised/clustering/base.md
-                  - Kmeans: api/experimental/ml/unsupervised/clustering/kmeans.md
-                  - Agglomerative: api/experimental/ml/unsupervised/clustering/agglomerative.md
-                  - GMM: api/experimental/ml/unsupervised/clustering/gmm.md
-                  - Hdbscan: api/experimental/ml/unsupervised/clustering/hdbscan.md
-                  - Dbscan: api/experimental/ml/unsupervised/clustering/dbscan.md
-                  - Optics: api/experimental/ml/unsupervised/clustering/optics.md
-      - SciML:
-          - PINNS:
-            - Model:
-              - Model: api/experimental/sciml/pinns/model/model.md
-            - Physics:
-              - cd2d: api/experimental/sciml/pinns/physics/cd2d.md
-              - Poisson2d: api/experimental/sciml/pinns/physics/poisson2d.md
-          - FNO:
-            - Layer:
-              - FNO block: api/experimental/sciml/fno/layers/fno_block_1d.md
-              - Spectral conv: api/experimental/sciml/fno/layers/spectral_conv_1d.md
-            - Models:
-              - FNO: api/experimental/sciml/fno/models/fno_1d.md
-          - Geometry:
-              - geometry_2d: api/experimental/sciml/geometry/geometry_2d.md
-              - geometry: api/experimental/sciml/geometry/geometry.md
-          - fe:
-              - Chebyshev: api/experimental/sciml/fe/basis_2d_QN_Chebyshev_2.md
-              - jacobi: api/experimental/sciml/fe/basis_2d_QN_Jacobi.md
-              - Legendre_Special: api/experimental/sciml/fe/basis_2d_QN_Legendre_Special.md
-              - Legendre: api/experimental/sciml/fe/basis_2d_QN_Legendre.md
-              - Function 2D: api/experimental/sciml/fe/basis_function_2d.md
-              - Function 3D: api/experimental/sciml/fe/basis_function_3d.md
-              - FE_transformation_2d: api/experimental/sciml/fe/fe_transformation_2d.md
-              - FE_transformation_3d: api/experimental/sciml/fe/fe_transformation_3d.md
-              - FE2D_Cell: api/experimental/sciml/fe/fe2d_cell.md
-              - fe2d_setup_main: api/experimental/sciml/fe/fe2d_setup_main.md
-              - fespace: api/experimental/sciml/fe/fespace.md
-              - fespace2d: api/experimental/sciml/fe/fespace2d.md
-              - quad_affine: api/experimental/sciml/fe/quad_affine.md
-              - quad_bilinear: api/experimental/sciml/fe/quad_bilinear.md
-              - quadratureformulas_quad2d: api/experimental/sciml/fe/quadratureformulas_quad2d.md
-              - quadratureformulas: api/experimental/sciml/fe/quadratureformulas.md
-          - fastvpinns:
-            - data:
-              - datahandler: api/experimental/sciml/fastvpinns/data/datahandler.md
-              - datahandler2: api/experimental/sciml/fastvpinns/data/datahandler2d.md
-            - Model:
-              - Model hard : api/experimental/sciml/fastvpinns/model/model_hard.md
-              - Model inverse domain: api/experimental/sciml/fastvpinns/model/model_inverse_domain.md
-              - Model inverse : api/experimental/sciml/fastvpinns/model/model_inverse.md
-              - Model  : api/experimental/sciml/fastvpinns/model/model.md
-            - Physics:
-              - cd2d_inverse_domain : api/experimental/sciml/fastvpinns/physics/cd2d_inverse_domain.md
-              - cd2d_inverse: api/experimental/sciml/fastvpinns/physics/cd2d_inverse.md
-              - cd2d: api/experimental/sciml/fastvpinns/physics/cd2d.md
-              - helmholtz2d: api/experimental/sciml/fastvpinns/physics/helmholtz2d.md
-              - poisson2d:  api/experimental/sciml/fastvpinns/physics/poisson2d.md
-              - poissson2d Inverse :   api/experimental/sciml/fastvpinns/physics/poisson_2d_inverse.md
-      - Model compression:
-          - pruning: api/experimental/model_compression/pruning.md
-          - quantization: api/experimental/model_compression/quantization.md
-  - Examples:
-        - ML:
-          - superivised :
-             - classification:
-               - example logistic regresssion: api/experimental/examples/ml/supervised/classification/example_logistic_regression.md
-               - example naive bayes: api/experimental/examples/ml/supervised/classification/example_naive_bayes.md
-             - regression:
-                - example linear regression: api/experimental/examples/ml/supervised/regression/example_linear_regression.md
-                - example ridge regression: api/experimental/examples/ml/supervised/regression/example_ridge_regression.md
-                - example lasso regression: api/experimental/examples/ml/supervised/regression/example_lasso_regression.md
-                - example polynomial regression: api/experimental/examples/ml/supervised/regression/example_polynomial_regression.md
-                - example support vector regression: api/experimental/examples/ml/supervised/regression/example_svr.md
-          - unsupervised :
-             - clustering:
-                - example Kmeans: api/experimental/examples/ml/unsupervised/clustering/example_kmeans.md
-        - DL:
-          - mnist_train : api/experimental/examples/dl/mnist_train.md
-          - cnn_mnist : api/experimental/examples/dl/cnn_mnist.md
-          - vae_mnist : api/experimental/examples/dl/vae_mnist.md
-          - gcn_cora : api/experimental/examples/dl/gcn_cora.md
-        - Model compression:
-          - pruned base mnist: api/experimental/examples/model compression/pruned_base_mnist.md
-          - pruned mnist: api/experimental/examples/model compression/pruned_mnist.md
-          - quantized base mnist: api/experimental/examples/model compression/quantized_base_mnist.md
-          - quantized mnist: api/experimental/examples/model compression/quantized_mnist.md
-        - Sciml:
-          - Fastvpinns:
-             - example helmhotlz2d: api/experimental/examples/sciml/fastvpinns/example_helmholtz2d.md
-             - example poisson2d: api/experimental/examples/sciml/fastvpinns/example_poisson2d.md
-          - FNO:
-             - example_advection: api/experimental/examples/sciml/fno/example_advection.md
-             - example_burgers: api/experimental/examples/sciml/fno/example_burgers.md
-             - example_heat: api/experimental/examples/sciml/fno/example_heat.md
-             - example_wave: api/experimental/examples/sciml/fno/example_wave.md
-          # - PINNs   :
-          #    - example_poisson2d: api/experimental/examples/sciml/pinns/forwardproblems/example_poisson2d.md
-  - Contribution:
-          - contribution: api/experimental/Contribution/contribution.md
+  - API:
+      - Training: api/training/index.md
+      - Diffusion: api/diffusion/index.md
+      - Transformers: api/transformers/index.md
+      - Data: api/data/index.md
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true

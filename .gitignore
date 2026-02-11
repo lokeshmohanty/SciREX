@@ -30,6 +30,7 @@ fastvpinns.egg-info/
 examples/**/output/
 examples/**/output_*
 examples/**/__pycache__/
+examples/**/.ipynb_checkpoints/
 
 output/*
 
@@ -39,6 +40,8 @@ output/*
 *.msh
 sensor_points.png
 .egg-info/
+.coverage
+coverage.xml
 
 #result files
 # examples/**/*.png # as the README.md uses png image files

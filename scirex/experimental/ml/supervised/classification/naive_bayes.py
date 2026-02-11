@@ -68,7 +68,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 import joblib  # For model saving
 
 from .base import Classification
@@ -184,7 +184,7 @@ class NaiveBayes(Classification):
         data: np.ndarray,
         labels: np.ndarray,
         test_size: float = 0.2,
-        param_grid: Dict[str, Any] = None,
+        param_grid: Optional[Dict[str, Any]] = None,
         cv: int = 5,
     ) -> Dict[str, Any]:
         """
