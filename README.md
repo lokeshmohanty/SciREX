@@ -20,24 +20,41 @@ SciREX is an open-source scientific AI and machine learning framework designed f
 - **Scientific Visualization**: Publication-ready plotting and visualization tools
 - **Industrial Integration**: Enterprise-ready solutions backed by Zenteiq's industrial expertise
 
+## Quick Start
+
+Get started with SciREX by installing it via `pip`:
+
+```bash
+pip install scirex
+```
+
+### Simple Training Example
+```python
+import jax.numpy as jnp
+from flax import nnx as nn
+from scirex.training import Trainer
+
+# Define a simple model and loss
+model = nn.Linear(10, 2, rngs=nn.Rngs(0))
+def loss_fn(model, batch):
+    x, y = batch
+    logits = model(x)
+    return jnp.mean((logits - y) ** 2), logits
+
+# Initialize Trainer
+trainer = Trainer(model=model, optimizer=nn.Optimizer(model, optax.adam(1e-3)), loss_fn=loss_fn)
+
+# Train!
+trainer.train(batch_iterator, num_epochs=5)
+```
+
 ## Core Capabilities
 
-- **Scientific Computing**
-  - Physics-Informed Neural Networks ([PINNs](scirex/core/sciml/pinns/README.md), [FastVPINNs](scirex/core/sciml/fastvpinns/README.md))
-  - Differential Equation Solvers
-  - Scientific Data Analysis
-
-- **Machine Learning**
-  - Classical ML Algorithms
-  - Deep Learning Models
-  - Custom Loss Functions
-  - Advanced Optimizers
-
-- **Research Tools**
-  - Experiment Management
-  - Result Visualization
-  - Benchmark Datasets
-  - Performance Metrics
+- **[Diffusion Module](scirex/diffusion/README.md)**: Implementation of noise schedules and diffusion samplers.
+- **[Training Module](scirex/training/README.md)**: Utilities for managing optimization loops and model training.
+- **[Transformers Module](scirex/transformers/README.md)**: Modular Transformer and U-Net architecture implementations.
+- **[Experimental Module](scirex/experimental/README.md)**: Research-focused implementations and experimental features.
+- **[Examples](examples/README.md)**: Comprehensive end-to-end examples and tutorials.
 
 ## Documentation
 

@@ -1,3 +1,3 @@
 # Transformers Module
 
-::: scirex.transformers.transformer
+::: scirex.transformers

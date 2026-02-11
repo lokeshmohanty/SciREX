@@ -65,7 +65,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 
 from .base import Classification
 
@@ -176,7 +176,7 @@ class LogisticRegressionClassifier(Classification):
         data: np.ndarray,
         labels: np.ndarray,
         split_ratio: float = 0.2,
-        param_grid: Dict[str, Any] = None,
+        param_grid: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Execute the full classification pipeline with optional grid search.

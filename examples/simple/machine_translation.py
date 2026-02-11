@@ -38,6 +38,7 @@ Authors:
 
 """
 
+import argparse
 import pathlib
 import random
 import re
@@ -46,15 +47,16 @@ import tempfile
 import zipfile
 
 import grain.python as grain
+import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
 import numpy as np
 import optax
 import requests
 import tiktoken
-import tqdm
 from flax import nnx as nn
 
+from scirex.training import Trainer
 from scirex.transformers import EncoderDecoderModel
 
 ## Hyperparameters
@@ -127,14 +129,25 @@ def preprocess(train_paris, val_paris, test_paris):
     tokenizer = tiktoken.get_encoding("cl100k_base")
 
     def format_dataset(eng, spa, tokenizer, context_size):
+        """Standardizes, tokenizes and pads the input/target sequences.
+
+        Args:
+            eng: Spanish input string.
+            spa: English target string.
+            tokenizer: tiktoken encoder.
+            context_size: Fixed length for padding.
+
+        Returns:
+            Dictionary with encoder_inputs, decoder_inputs, and target_output.
+        """
         eng = custom_standardization(eng)
         spa = custom_standardization(spa)
         eng = tokenize_and_pad(eng, tokenizer, context_size)
         spa = tokenize_and_pad(spa, tokenizer, context_size)
         return {
             "encoder_inputs": eng,
-            "decoder_inputs": spa[:-1],
-            "target_output": spa[1:],
+            "decoder_inputs": spa[:-1],  # Shifted right for teacher forcing
+            "target_output": spa[1:],  # Shifted left for prediction target
         }
 
     context_size = 20
@@ -196,70 +209,6 @@ def preprocess(train_paris, val_paris, test_paris):
     return train_loader, val_loader, n_batches, tokenizer
 
 
-def compute_loss(logits, labels):
-    loss = optax.softmax_cross_entropy_with_integer_labels(logits=logits, labels=labels)
-    return jnp.mean(loss)
-
-
-@nn.jit
-def train_step(model, optimizer, batch):
-    def loss_fn(model, train_encoder_input, train_decoder_input, train_target_input):
-        logits = model(train_encoder_input, train_decoder_input)
-        loss = compute_loss(logits, train_target_input)
-        return loss
-
-    grad_fn = nn.value_and_grad(loss_fn)
-    loss, grads = grad_fn(
-        model, jnp.array(batch["encoder_inputs"]), jnp.array(batch["decoder_inputs"]), jnp.array(batch["target_output"])
-    )
-    optimizer.update(grads)
-    return loss
-
-
-@nn.jit
-def eval_step(model, batch, eval_metrics):
-    logits = model(jnp.array(batch["encoder_inputs"]), jnp.array(batch["decoder_inputs"]))
-    loss = compute_loss(logits, jnp.array(batch["target_output"]))
-    labels = jnp.array(batch["target_output"])
-
-    eval_metrics.update(
-        loss=loss,
-        logits=logits,
-        labels=labels,
-    )
-
-
-def train_one_epoch(epoch, train_metrics_history, n_batches):
-    model.train()  # Set model to the training mode: e.g. update batch statistics
-    with tqdm.tqdm(
-        desc=f"[train] epoch: {epoch}/{n_epochs}, ",
-        total=n_batches,
-        bar_format=bar_format,
-        leave=True,
-    ) as pbar:
-        for batch in train_loader:
-            loss = train_step(model, optimizer, batch)
-            train_metrics_history["train_loss"].append(loss.item())
-            pbar.set_postfix({"loss": loss.item()})
-            pbar.update(1)
-
-
-def evaluate_model(epoch, eval_metrics, eval_metrics_history):
-    # Compute the metrics on the train and val sets after each training epoch.
-    model.eval()  # Set model to evaluation model: e.g. use stored batch statistics
-
-    eval_metrics.reset()  # Reset the eval metrics
-    for val_batch in val_loader:
-        eval_step(model, val_batch, eval_metrics)
-
-    for metric, value in eval_metrics.compute().items():
-        eval_metrics_history[f"test_{metric}"].append(value)
-
-    print(f"[test] epoch: {epoch + 1}/{n_epochs}")
-    print(f"- total loss: {eval_metrics_history['test_loss'][-1]:0.4f}")
-    print(f"- Accuracy: {eval_metrics_history['test_accuracy'][-1]:0.4f}")
-
-
 def decode_sequence(input_sentence):
 
     input_sentence = custom_standardization(input_sentence)
@@ -279,12 +228,12 @@ def decode_sequence(input_sentence):
     return decoded_sentence
 
 
-def visualize(test_pairs, eval_metrics_history):
+def visualize(test_pairs, history):
     _fig, axs = plt.subplots(1, 2, figsize=(10, 10))
     axs[0].set_title("Loss value on eval set")
-    axs[0].plot(eval_metrics_history["test_loss"])
+    axs[0].plot(history["eval_loss"])
     axs[1].set_title("Accuracy on eval set")
-    axs[1].plot(eval_metrics_history["test_accuracy"])
+    axs[1].plot(history["eval_accuracy"])
 
     test_eng_texts = [pair[0] for pair in test_pairs]
     test_result_pairs = []
@@ -299,6 +248,11 @@ def visualize(test_pairs, eval_metrics_history):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Machine Translation Example with Profiling")
+    parser.add_argument("--profile-compute", type=str, help="Directory to save compute traces")
+    parser.add_argument("--profile-memory", type=str, help="Filename to save memory profile")
+    args = parser.parse_args()
+
     text_paris, train_pairs, val_pairs, test_pairs = get_data()
     train_loader, val_loader, n_batches, tokenizer = preprocess(train_pairs, val_pairs, test_pairs)
     vocab_size = tokenizer.n_vocab
@@ -318,12 +272,58 @@ if __name__ == "__main__":
     model = EncoderDecoderModel(context_size, vocab_size, d_model, d_hidden, n_heads, dropout_rate, rngs=rng)
     optimizer = nn.Optimizer(model, optax.adamw(learning_rate))
 
-    for epoch in range(n_epochs):
-        train_one_epoch(epoch, train_metrics_history, n_batches)
-        evaluate_model(epoch, eval_metrics, eval_metrics_history)
+    def loss_fn(model, batch):
+        """Loss function for training."""
+        encoder_inputs = jnp.array(batch["encoder_inputs"])
+        decoder_inputs = jnp.array(batch["decoder_inputs"])
+        target_output = jnp.array(batch["target_output"])
+        logits = model(encoder_inputs, decoder_inputs)
+        loss = optax.softmax_cross_entropy_with_integer_labels(logits=logits, labels=target_output)
+        return jnp.mean(loss), logits
 
-    plt.plot(train_metrics_history["train_loss"], label="Loss value during the training")
+    # Create trainer (uses scirex.training.Trainer)
+    trainer = Trainer(
+        model=model,
+        optimizer=optimizer,
+        loss_fn=loss_fn,
+        eval_metrics=eval_metrics,
+    )
+
+    print(f"\nTraining for {n_epochs} epochs...")
+    if args.profile_compute:
+        print(f"Profiling compute trace to {args.profile_compute}...")
+        with jax.profiler.trace(args.profile_compute):
+            trainer.train(
+                train_loader=train_loader,
+                n_epochs=n_epochs,
+                eval_loader=val_loader,
+                eval_freq=1,
+            )
+            # Ensure everything is finished before stopping trace
+            jax.block_until_ready(trainer.model)
+    else:
+        trainer.train(
+            train_loader=train_loader,
+            n_epochs=n_epochs,
+            eval_loader=val_loader,
+            eval_freq=1,
+        )
+
+    if args.profile_memory:
+        print(f"Saving memory profile to {args.profile_memory}...")
+        # Ensure model is ready before profiling memory
+        jax.block_until_ready(trainer.model)
+        jax.profiler.save_device_memory_profile(args.profile_memory)
+
+    # Print timing summary
+    avg_epoch_time = sum(trainer.history["epoch_time"]) / len(trainer.history["epoch_time"])
+    print(f"\nAverage time per epoch: {avg_epoch_time:.2f}s")
+    if trainer.history.get("eval_inference_time"):
+        avg_inference_time = sum(trainer.history["eval_inference_time"]) / len(trainer.history["eval_inference_time"])
+        print(f"Average inference time per batch: {avg_inference_time * 1000:.2f}ms")
+
+    plt.plot(trainer.history["train_loss"], label="Loss value during the training")
     plt.yscale("log")
     plt.legend()
 
-    visualize(test_pairs, eval_metrics_history)
+    visualize(test_pairs, trainer.history)

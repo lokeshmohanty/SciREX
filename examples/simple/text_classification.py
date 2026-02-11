@@ -46,16 +46,15 @@ import typing
 import grain.python as grain
 import jax
 import jax.numpy as jnp
-import matplotlib.pyplot as plt
 import numpy as np
 import optax
 import requests
-import tqdm
 from flax import nnx as nn
 
+from scirex.training import Trainer
 from scirex.transformers import EncoderModel
 
-num_epochs = 10  # Number of epochs during training.
+n_epochs = 10  # Number of epochs during training.
 learning_rate = 0.0001  # The learning rate.
 momentum = 0.9  # Momentum for Adam.
 bar_format = "{desc}[{n_fmt}/{total_fmt}]{postfix} [{elapsed}<{remaining}]"
@@ -192,68 +191,13 @@ def preprocess(x_train, x_test, y_train, y_test):
     return train_loader, test_loader, n_batches
 
 
-def compute_losses_and_logits(model: nn.Module, batch_tokens: jax.Array, labels: jax.Array):
+def loss_fn(model: nn.Module, batch: dict[str, jax.Array]):
+    """Loss function for training. Always returns (loss, logits)."""
+    batch_tokens = jnp.array(batch["encoded_indices"])
+    labels = jnp.array(batch["label"], dtype=jnp.int32)
     logits = model(batch_tokens)
-
     loss = optax.softmax_cross_entropy_with_integer_labels(logits=logits, labels=labels).mean()
-    return loss, logits
-
-
-@nn.jit
-def train_step(model: nn.Module, optimizer: nn.Optimizer, batch: dict[str, jax.Array]):
-    batch_tokens = jnp.array(batch["encoded_indices"])
-    labels = jnp.array(batch["label"], dtype=jnp.int32)
-
-    grad_fn = nn.value_and_grad(compute_losses_and_logits, has_aux=True)
-    (loss, _logits), grads = grad_fn(model, batch_tokens, labels)
-
-    optimizer.update(grads)  # In-place updates.
-
-    return loss
-
-
-@nn.jit
-def eval_step(model: nn.Module, batch: dict[str, jax.Array], eval_metrics: nn.MultiMetric):
-    batch_tokens = jnp.array(batch["encoded_indices"])
-    labels = jnp.array(batch["label"], dtype=jnp.int32)
-    loss, logits = compute_losses_and_logits(model, batch_tokens, labels)
-
-    eval_metrics.update(
-        loss=loss,
-        logits=logits,
-        labels=labels,
-    )
-
-
-def train_one_epoch(epoch, train_metrics_history, n_batches):
-    model.train()
-    with tqdm.tqdm(
-        desc=f"[train] epoch: {epoch}/{num_epochs}, ",
-        total=n_batches,
-        bar_format=bar_format,
-        leave=True,
-    ) as pbar:
-        for batch in train_loader:
-            loss = train_step(model, optimizer, batch)
-            train_metrics_history["train_loss"].append(loss.item())
-            pbar.set_postfix({"loss": loss.item()})
-            pbar.update(1)
-
-
-def evaluate_model(epoch, eval_metrics, eval_metrics_history):
-    # Compute the metrics on the training and test sets after each training epoch.
-    model.eval()
-
-    eval_metrics.reset()  # Reset the eval metrics
-    for test_batch in test_loader:
-        eval_step(model, test_batch, eval_metrics)
-
-    for metric, value in eval_metrics.compute().items():
-        eval_metrics_history[f"test_{metric}"].append(value)
-
-    print(f"[test] epoch: {epoch + 1}/{num_epochs}")
-    print(f"- total loss: {eval_metrics_history['test_loss'][-1]:0.4f}")
-    print(f"- Accuracy: {eval_metrics_history['test_accuracy'][-1]:0.4f}")
+    return loss, logits  # Always return (loss, logits)
 
 
 def show_reviews(indices: list[int]) -> None:
@@ -313,28 +257,32 @@ if __name__ == "__main__":
         accuracy=nn.metrics.Accuracy(),
     )
 
-    train_metrics_history = {
-        "train_loss": [],
-    }
+    # Create trainer with automatic JIT compilation and history tracking
+    trainer = Trainer(
+        model=model,
+        optimizer=optimizer,
+        loss_fn=loss_fn,  # Always returns (loss, logits)
+        eval_metrics=eval_metrics,  # eval_fn auto-derived!
+    )
 
-    eval_metrics_history = {
-        "test_loss": [],
-        "test_accuracy": [],
-    }
+    # Train the model
+    print("\nTraining...")
+    trainer.train(
+        train_loader=train_loader,
+        n_epochs=n_epochs,
+        eval_loader=test_loader,
+        eval_freq=1,
+    )
 
-    for epoch in range(num_epochs):
-        train_one_epoch(epoch, train_metrics_history, n_batches)
-        evaluate_model(epoch, eval_metrics, eval_metrics_history)
+    # Visualize training history
+    trainer.visualize()
 
-    plt.plot(train_metrics_history["train_loss"], label="Loss value during the training")
-    plt.legend()
+    # Print final metrics
+    print(f"\nFinal train loss: {trainer.history['train_loss'][-1]:.4f}")
+    print(f"Final eval accuracy: {trainer.history['eval_accuracy'][-1]:.4f}")
 
-    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
-    axs[0].set_title("Loss value on test set")
-    axs[0].plot(eval_metrics_history["test_loss"])
-    axs[1].set_title("Accuracy on test set")
-    axs[1].plot(eval_metrics_history["test_accuracy"])
-
+    # Show some predictions
+    print("\nSample predictions:")
     response = requests.get(
         "https://storage.googleapis.com/tensorflow/tf-keras-datasets/imdb_word_index.json", timeout=5
     )
