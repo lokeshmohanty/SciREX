@@ -22,10 +22,20 @@ $q(x_t | x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t}x_0, (1 - \bar{\alpha}_t)I
 The model learns to predict the noise $\epsilon_\theta(x_t, t)$, which is used to recover $x_0$:
 $p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \sigma_t^2 I)$
 
+### Optimization Perspective & Generalized Sampling
+Recent work interprets the denoiser as an approximate projection onto the data manifold. A generalized sampler can be derived:
+$x_{t-1} = x_t - (\sigma_t - \sigma_{t-1}) \epsilon_{av} + \eta w_t$
+where $\epsilon_{av} = \gamma \epsilon_t + (1-\gamma) \epsilon_{t-1}$.
+
+Parameters:
+- $\gamma$ (gamma): Momentum term. $\gamma=1$ is standard, $\gamma > 1$ accelerates convergence.
+- $\mu$ (mu): Controls noise injection. $\mu=0$ is deterministic (DDIM-like), $\mu=0.5$ mimics DDPM.
+
 ### References
 - Ho, J., Jain, A., & Abbeel, P. (2020). [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239). NeurIPS.
 - Song, J., Meng, C., & Ermon, S. (2021). [Denoising Diffusion Implicit Models](https://arxiv.org/abs/2010.02502). ICLR.
 - Ho, J., & Salimans, T. (2022). [Classifier-Free Diffusion Guidance](https://arxiv.org/abs/2207.12598). NeurIPS Workshop.
+- Permenter, F., & Yuan, C. (2024). [Interpreting and Improving Diffusion Models from an Optimization Perspective](https://arxiv.org/abs/2306.04848). ICML.
 
 ## Quick Start: Noise Schedules and Sampling
 
@@ -65,7 +75,17 @@ optimizer.update(grads)
 # 5. Generate Samples
 # sigmas define the denoising path
 sampling_sigmas = schedule.sample_sigmas(steps=20)
-generated_samples = sample(model, sampling_sigmas, batchsize=500, rng=rng)
+
+# Standard DDIM sampling
+samples_ddim = sample(
+    model, sampling_sigmas, batchsize=500, rng=rng, method="ddim"
+)
+
+# Improved sampling with momentum (Gradient Estimation)
+samples_improved = sample(
+    model, sampling_sigmas, batchsize=500, rng=rng,
+    method="generalized", gamma=2.0
+)
 ```
 
 ## API Reference
@@ -81,7 +101,8 @@ Schedules define the amount of noise added to data at each diffusion step.
 
 ### Core Functions
 - `diffusion_loss(schedule)`: Returns a loss function for the diffusion process.
-- `sample(model, sigmas, batchsize=1, shape=(2,), method="ddim", ...)`: High-level sampling function that supports both DDPM (stochastic) and DDIM (deterministic) sampling.
+- `sample(...)`: Unified sampling interface supporting "ddpm", "ddim", and "generalized" methods.
+    - `sample(..., method="generalized", gamma=2.0)`: Uses the improved gradient estimation sampler.
 - `cfg(...)`: Implementation of classifier-free guidance for conditional generation.
 
 ## File Structure
@@ -89,7 +110,7 @@ Schedules define the amount of noise added to data at each diffusion step.
 ```
 .
 ├── forward.py    # Implementation of noise schedules, embeddings, and forward process.
-├── reverse.py    # Implementation of sampling methods (DDPM, DDIM, CFG).
+├── reverse.py    # Implementation of sampling methods (DDPM, DDIM, CFG, Generalized).
 ├── __init__.py   # Package initialization and component exports.
 └── README.md
 ```

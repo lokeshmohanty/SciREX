@@ -155,6 +155,79 @@ def sample_ddim(
     return xt
 
 
+def sample_generalized(
+    model: Any,
+    sigmas: Array,
+    batchsize: int = 1,
+    shape: tuple = (2,),
+    cond: Optional[Array] = None,
+    uncond: Optional[Array] = None,
+    guidance_scale: Optional[float] = None,
+    gamma: float = 1.0,  # Momentum term
+    mu: float = 0.0,  # Noise injection term
+    *,
+    rng: nn.Rngs,
+) -> Array:
+    r"""
+    Generalized sampler supporting DDPM, DDIM, and Gradient Estimation.
+
+    Updates follow:
+    $x_{t-1} = x_t - (\sigma_t - \sigma_{t-1}) \epsilon_{av} + \eta w_t$
+    where $\epsilon_{av} = \gamma \epsilon_t + (1-\gamma) \epsilon_{t-1}$
+
+    Special cases:
+    - DDIM: gamma=1, mu=0
+    - DDPM: gamma=1, mu=0.5
+    - Gradient Estimation (Momentum): gamma=2, mu=0
+
+    References:
+        - Permenter & Yuan, "Interpreting and Improving Diffusion Models from an Optimization Perspective", ICML 2024.
+    """
+    xt = jax.random.normal(rng(), (batchsize, *shape)) * sigmas[0]
+    eps_prev = jnp.zeros_like(xt)
+
+    model.eval()
+    for i in range(len(sigmas) - 1):
+        sig = sigmas[i]
+        sig_prev = sigmas[i + 1]
+
+        t_batch = jnp.full((batchsize,), sig)
+        if guidance_scale is not None and cond is not None:
+            eps = cfg(model, xt, t_batch, cond, uncond, guidance_scale)
+        else:
+            eps = model(xt, t_batch, cond) if cond is not None else model(xt, t_batch)
+
+        # Gradient estimation / momentum
+        eps_av = eps if i == 0 else eps * gamma + eps_prev * (1 - gamma)
+
+        eps_prev = eps
+
+        # Noise injection (mu)
+        # sig_p = (sig_prev / sig**mu)**(1/(1-mu)) -> This looks like specific scheduling?
+        # The blog post code:
+        # sig_p = (sig_prev/sig**mu)**(1/(1-mu))
+        # eta = (sig_prev**2 - sig_p**2).sqrt()
+        # xt = xt - (sig - sig_p) * eps_av + eta * randn()
+
+        # Handle mu=1 specially or assume mu < 1
+        # If mu=0, sig_p = sig_prev. eta = 0.
+        # If mu=0.5 (DDPM), sig_p < sig_prev.
+
+        # Avoiding division by zero if mu=1 (not supported by this formula)
+
+        # Derived from blog code:
+        # sig_p = (sig_prev * (sig ** (-mu))) ** (1 / (1 - mu))
+        sig_p = (sig_prev / (sig**mu)) ** (1 / (1 - mu))
+        eta = jnp.sqrt(sig_prev**2 - sig_p**2)
+
+        noise = jax.random.normal(rng(), xt.shape)
+
+        xt = xt - (sig - sig_p) * eps_av + eta * noise
+
+    model.train()
+    return xt
+
+
 def sample(
     model: Any,
     sigmas: Array,
@@ -164,11 +237,29 @@ def sample(
     guidance_scale: Optional[float] = None,
     cond: Optional[Array] = None,
     uncond: Optional[Array] = None,
+    gamma: float = 1.0,
+    mu: float = 0.0,
     *,
     rng: nn.Rngs,
 ) -> Array:
-    """Unified sampling interface."""
+    """Unified sampling interface.
+
+    Methods:
+    - 'ddpm': Uses sample_ddpm (legacy) or generalized with gamma=1, mu=0.5
+    - 'ddim': Uses sample_ddim (legacy) or generalized with gamma=1, mu=0
+    - 'generalized': Uses sample_generalized with custom gamma/mu
+    """
     if method == "ddpm":
         return sample_ddpm(model, sigmas, batchsize, shape, cond, uncond, guidance_scale, rng=rng)
-    else:
+    elif method == "ddim":
         return sample_ddim(model, sigmas, batchsize, shape, cond, uncond, guidance_scale, rng=rng)
+    elif method == "generalized":
+        return sample_generalized(
+            model, sigmas, batchsize, shape, cond, uncond, guidance_scale, gamma=gamma, mu=mu, rng=rng
+        )
+    else:
+        # Default to DDIM/Generalized with provided params if method name is unknown but valid params?
+        # Or stick to specific names. Let's redirect to generalized if custom method.
+        return sample_generalized(
+            model, sigmas, batchsize, shape, cond, uncond, guidance_scale, gamma=gamma, mu=mu, rng=rng
+        )

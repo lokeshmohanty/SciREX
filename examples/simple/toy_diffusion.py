@@ -33,7 +33,7 @@ import optax
 from flax import nnx as nn
 
 from scirex.data import create_dataloader
-from scirex.diffusion import ScheduleCosine, diffusion_loss, sample_ddim
+from scirex.diffusion import ScheduleCosine, diffusion_loss, sample
 from scirex.diffusion.helpers import TimeInputMLP
 from scirex.training import Trainer
 
@@ -99,22 +99,40 @@ def main():
     print("Sampling from model...")
     sigmas = schedule.sample_sigmas(20)  # 20 steps
 
-    sampled_data = sample_ddim(
+    # DDIM Sampling
+    print("Running DDIM sampling...")
+    sampled_data_ddim = sample(
         model_2d,
         sigmas,
         batchsize=1000,
         shape=(2,),
+        method="ddim",
         rng=nn.Rngs(42).sample,
     )
 
+    # Generalized Sampling (Momentum)
+    print("Running Generalized sampling (Momentum, gamma=2.0)...")
+    sampled_data_gen = sample(
+        model_2d,
+        sigmas,
+        batchsize=1000,
+        shape=(2,),
+        method="generalized",
+        gamma=2.0,
+        rng=nn.Rngs(43).sample,
+    )
+
     # Plot results
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(12, 6))
+
+    # Plot DDIM
+    plt.subplot(1, 2, 1)
     plt.scatter(
-        sampled_data[:, 0],
-        sampled_data[:, 1],
+        sampled_data_ddim[:, 0],
+        sampled_data_ddim[:, 1],
         alpha=0.6,
         s=10,
-        label="Sampled",
+        label="Sampled (DDIM)",
     )
     plt.scatter(
         train_data_2d[:, 0],
@@ -123,11 +141,34 @@ def main():
         s=10,
         label="Real",
     )
-    plt.title("2D Spiral Diffusion Generation")
+    plt.title("DDIM Generation")
     plt.legend()
     plt.axis("equal")
-    plt.savefig("spiral_generated.png")
-    print("Saved generated data plot to 'spiral_generated.png'")
+
+    # Plot Generalized
+    plt.subplot(1, 2, 2)
+    plt.scatter(
+        sampled_data_gen[:, 0],
+        sampled_data_gen[:, 1],
+        alpha=0.6,
+        s=10,
+        label="Sampled (Gamma=2)",
+        c="orange",
+    )
+    plt.scatter(
+        train_data_2d[:, 0],
+        train_data_2d[:, 1],
+        alpha=0.1,
+        s=10,
+        label="Real",
+    )
+    plt.title("Generalized Generation (Momentum)")
+    plt.legend()
+    plt.axis("equal")
+
+    plt.tight_layout()
+    plt.savefig("spiral_generated_comparison.png")
+    print("Saved generated data plot to 'spiral_generated_comparison.png'")
     plt.close()
 
 
